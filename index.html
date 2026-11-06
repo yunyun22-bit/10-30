@@ -74,9 +74,11 @@ function renderAccount(user) {
       const messages = {
         "auth/popup-closed-by-user": "登入視窗已關閉。",
         "auth/unauthorized-domain": "此網站網域尚未加入 Firebase 授權網域。",
-        "auth/operation-not-allowed": "Firebase 尚未啟用 Google 登入。"
+        "auth/operation-not-allowed": "Firebase 尚未啟用 Google 登入。",
+        "auth/network-request-failed": "網路連線失敗，請檢查連線後重試。",
+        "auth/timeout": "登入逾時，請再試一次。"
       };
-      document.getElementById("authStatus").textContent = messages[error.code] || "Google 登入失敗，請稍後再試。";
+      document.getElementById("authStatus").textContent = `${messages[error.code] || "Google 登入失敗"}（${error.code || "未知錯誤"}）`;
     }
   };
   document.getElementById("gateGoogleSignIn").onclick = startGoogleSignIn;
@@ -84,7 +86,9 @@ function renderAccount(user) {
 }
 if (auth) getRedirectResult(auth).catch(error => {
   console.error(error);
-  const messages = { "auth/unauthorized-domain": "此網站網域尚未加入 Firebase 授權網域。", "auth/operation-not-allowed": "Firebase 尚未啟用 Google 登入。" };
+  const messages = { "auth/unauthorized-domain": "此網站網域尚未加入 Firebase 授權網域。", "auth/operation-not-allowed": "Firebase 尚未啟用 Google 登入。",
+        "auth/network-request-failed": "網路連線失敗，請檢查連線後重試。",
+        "auth/timeout": "登入逾時，請再試一次。" };
   document.getElementById("authStatus").textContent = messages[error.code] || "Google 登入未完成，請再試一次。";
 });
 if (auth) {
