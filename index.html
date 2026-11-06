@@ -26,7 +26,7 @@
 <div class="modal-backdrop" id="modalBackdrop"><div class="modal"><div class="modal-top"><h2 id="modalTitle">新增任務</h2><button class="close" id="closeModal">×</button></div><form id="entryForm"><div class="field"><label for="entryName">名稱</label><input id="entryName" required maxlength="60" placeholder="例如：複習日文單字"></div><div class="field-row"><div class="field"><label for="entryDate">日期／期限</label><input id="entryDate" type="date" required></div><div class="field" id="timeField"><label for="entryTime">時間</label><input id="entryTime" type="time" value="09:00"></div></div><div id="goalFields" style="display:none"><div class="field"><label for="goalSubject">科目／類別</label><input id="goalSubject" maxlength="40" placeholder="例如：日文、數學、設計"></div><div class="field"><label for="goalDescInput">備註</label><input id="goalDescInput" maxlength="120" placeholder="補充說明（選填）"></div><div class="field-row"><div class="field"><label for="goalDoneInput">目前進度</label><input id="goalDoneInput" type="number" min="0" value="0"></div><div class="field"><label for="goalTotalInput">目標總量</label><input id="goalTotalInput" type="number" min="1" value="10"></div></div></div><div id="taskFields" style="display:none"><div class="field"><label for="taskCategory">分類</label><select id="taskCategory"><option>學習</option><option>工作</option><option>個人</option><option>健康</option><option>其他</option></select></div><div class="field"><label for="taskPriority">優先順序</label><select id="taskPriority"><option value="normal">一般</option><option value="high">重要</option><option value="urgent">緊急</option></select></div><div class="field"><label for="taskDesc">任務說明</label><input id="taskDesc" maxlength="140" placeholder="補充任務細節（選填）"></div><div class="field-row"><div class="field"><label for="taskReminder">提醒時間</label><select id="taskReminder"><option value="none">不提醒</option><option value="day-before">前一天</option><option value="hour-before">前一小時</option><option value="at-time">期限當下</option></select></div><div class="field"><label for="taskRepeat">重複</label><select id="taskRepeat"><option value="none">不重複</option><option value="daily">每天</option><option value="weekly">每週</option><option value="monthly">每月</option></select></div></div><label style="display:flex;align-items:center;gap:8px;font-size:12px;margin:12px 0"><input type="checkbox" id="taskHasTime"> 設定執行時間</label></div><div class="field" id="typeField"><label for="entryType">類型</label><select id="entryType"><option value="task">待辦任務</option><option value="event">行程</option></select></div><button class="submit" type="submit">儲存</button></form></div></div><div class="toast" id="toast"></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 // Firebase web app config. Replace placeholders with Firebase Console > Project settings > Your apps values.
 const firebaseConfig = {
@@ -68,7 +68,7 @@ function renderAccount(user) {
       return;
     }
     document.getElementById("authStatus").textContent = "正在開啟 Google 登入…";
-    try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+    try { await signInWithRedirect(auth, new GoogleAuthProvider()); }
     catch (error) {
       console.error(error);
       const messages = {
@@ -82,6 +82,11 @@ function renderAccount(user) {
   document.getElementById("gateGoogleSignIn").onclick = startGoogleSignIn;
   document.getElementById("googleSignIn").onclick = startGoogleSignIn;
 }
+if (auth) getRedirectResult(auth).catch(error => {
+  console.error(error);
+  const messages = { "auth/unauthorized-domain": "此網站網域尚未加入 Firebase 授權網域。", "auth/operation-not-allowed": "Firebase 尚未啟用 Google 登入。" };
+  document.getElementById("authStatus").textContent = messages[error.code] || "Google 登入未完成，請再試一次。";
+});
 if (auth) {
   onAuthStateChanged(auth, renderAccount, error => {
     console.error(error);
