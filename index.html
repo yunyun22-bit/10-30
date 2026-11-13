@@ -8,7 +8,7 @@
 [data-theme="ocean"]{--bg:#f2f7fa;--green:#39718a;--green2:#e5f0f5;--lime:#a9d4de;--orange:#dc966d}[data-theme="lavender"]{--bg:#f7f4fa;--green:#705987;--green2:#eee8f5;--lime:#d3c0e5;--orange:#cc8f87}[data-theme="sunset"]{--bg:#fbf5f0;--green:#a45e42;--green2:#f7e9df;--lime:#e7c389;--orange:#cb774f}.task-edit{border:0;background:#f3f5f1;color:var(--green);border-radius:8px;padding:6px 9px;font-size:11px}.tag.high{color:#a76732;background:#fbefdf}.tag.urgent{color:#aa4a4a;background:#fae9e8}#taskFields{border-top:1px solid var(--line);padding-top:4px}</style>
 </head>
 <body>
-<div id="authGate" class="auth-gate" aria-live="polite"><section class="auth-card"><div class="brand-icon">◷</div><h1>登入以繼續</h1><p>使用 Google 或 LINE 帳號登入，進入你的個人行程與任務。</p><div style="display:grid;gap:10px"><button type="button" class="signin-button" id="gateGoogleSignIn" style="width:100%">使用 Google 帳號登入</button><button type="button" class="signin-button" id="gateLineSignIn" style="width:100%;background:#06c755">使用 LINE 帳號登入</button></div><div class="auth-status" id="authStatus">正在連線 Firebase…</div></section></div>
+<div id="authGate" class="auth-gate" aria-live="polite"><section class="auth-card"><div class="brand-icon">◷</div><h1>登入以繼續</h1><p>請使用 Google 帳號登入，進入你的個人行程與任務。</p><button type="button" class="signin-button" id="gateGoogleSignIn">使用 Google 帳號登入</button><div class="auth-status" id="authStatus">正在連線 Firebase…</div></section></div>
 <div id="app" hidden>
 <header class="topbar"><div class="brand"><div class="brand-icon">◷</div>日常 <span style="font-size:12px;color:#99a19b;font-weight:500">DAYMARK</span></div><div class="top-actions"><span class="date-chip" id="topDate"></span><div class="avatar" id="accountArea"><span>尚未登入</span><button type="button" class="signin-button" id="googleSignIn">使用 Google 登入</button></div></div></header>
 <div class="layout"><main>
@@ -26,7 +26,7 @@
 <div class="modal-backdrop" id="modalBackdrop"><div class="modal"><div class="modal-top"><h2 id="modalTitle">新增任務</h2><button class="close" id="closeModal">×</button></div><form id="entryForm"><div class="field"><label for="entryName">名稱</label><input id="entryName" required maxlength="60" placeholder="例如：複習日文單字"></div><div class="field-row"><div class="field"><label for="entryDate">日期／期限</label><input id="entryDate" type="date" required></div><div class="field" id="timeField"><label for="entryTime">時間</label><input id="entryTime" type="time" value="09:00"></div></div><div id="goalFields" style="display:none"><div class="field"><label for="goalSubject">科目／類別</label><input id="goalSubject" maxlength="40" placeholder="例如：日文、數學、設計"></div><div class="field"><label for="goalDescInput">備註</label><input id="goalDescInput" maxlength="120" placeholder="補充說明（選填）"></div><div class="field-row"><div class="field"><label for="goalDoneInput">目前進度</label><input id="goalDoneInput" type="number" min="0" value="0"></div><div class="field"><label for="goalTotalInput">目標總量</label><input id="goalTotalInput" type="number" min="1" value="10"></div></div></div><div id="taskFields" style="display:none"><div class="field"><label for="taskCategory">分類</label><select id="taskCategory"><option>學習</option><option>工作</option><option>個人</option><option>健康</option><option>其他</option></select></div><div class="field"><label for="taskPriority">優先順序</label><select id="taskPriority"><option value="normal">一般</option><option value="high">重要</option><option value="urgent">緊急</option></select></div><div class="field"><label for="taskDesc">任務說明</label><input id="taskDesc" maxlength="140" placeholder="補充任務細節（選填）"></div><div class="field-row"><div class="field"><label for="taskReminder">提醒時間</label><select id="taskReminder"><option value="none">不提醒</option><option value="day-before">前一天</option><option value="hour-before">前一小時</option><option value="at-time">期限當下</option></select></div><div class="field"><label for="taskRepeat">重複</label><select id="taskRepeat"><option value="none">不重複</option><option value="daily">每天</option><option value="weekly">每週</option><option value="monthly">每月</option></select></div></div><label style="display:flex;align-items:center;gap:8px;font-size:12px;margin:12px 0"><input type="checkbox" id="taskHasTime"> 設定執行時間</label></div><div class="field" id="typeField"><label for="entryType">類型</label><select id="entryType"><option value="task">待辦任務</option><option value="event">行程</option></select></div><button class="submit" type="submit">儲存</button></form></div></div><div class="toast" id="toast"></div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
 
 // Firebase web app config. Replace placeholders with Firebase Console > Project settings > Your apps values.
 const firebaseConfig = {
@@ -60,8 +60,8 @@ function renderAccount(user) {
 
   document.getElementById("authGate").hidden = false;
   document.getElementById("app").hidden = true;
-  document.getElementById("authStatus").textContent = "尚未登入，請選擇 Google 或 LINE 帳號。";
-  area.innerHTML = `<span>尚未登入</span><button type="button" class="signin-button" id="googleSignIn">使用 Google 登入</button><button type="button" class="signin-button" id="lineSignIn" style="background:#06c755">使用 LINE 登入</button>`;
+  document.getElementById("authStatus").textContent = "尚未登入，請使用 Google 帳號繼續。";
+  area.innerHTML = `<span>尚未登入</span><button type="button" class="signin-button" id="googleSignIn">使用 Google 登入</button>`;
   const startGoogleSignIn = async () => {
     if (!firebaseReady || !auth) {
       document.getElementById("authStatus").textContent = "Firebase 設定尚未完成。";
@@ -82,32 +82,8 @@ function renderAccount(user) {
       document.getElementById("authStatus").textContent = `${messages[error.code] || "Google 登入失敗"}（${error.code || "未知錯誤"}）`;
     }
   };
-  const startLineSignIn = async () => {
-    if (!firebaseReady || !auth) {
-      document.getElementById("authStatus").textContent = "Firebase 設定尚未完成。";
-      return;
-    }
-    document.getElementById("authStatus").textContent = "正在開啟 LINE 登入…";
-    const provider = new OAuthProvider("oidc.line");
-    provider.addScope("profile");
-    try { await signInWithPopup(auth, provider); }
-    catch (error) {
-      console.error(error);
-      const messages = {
-        "auth/unauthorized-domain": "此網站網域尚未加入 Firebase 授權網域。",
-        "auth/operation-not-allowed": "Firebase 尚未設定 LINE OIDC 登入，請先啟用 oidc.line Provider。",
-        "auth/invalid-credential": "LINE 登入設定無效，請檢查 Channel ID、Channel Secret 與回呼網址。",
-        "auth/popup-blocked": "瀏覽器封鎖了登入視窗，請允許此網站開啟彈出視窗後再試。",
-        "auth/network-request-failed": "網路連線失敗，請檢查連線後重試。",
-        "auth/timeout": "登入逾時，請再試一次。"
-      };
-      document.getElementById("authStatus").textContent = `${messages[error.code] || "LINE 登入失敗"}（${error.code || "未知錯誤"}）`;
-    }
-  };
   document.getElementById("gateGoogleSignIn").onclick = startGoogleSignIn;
   document.getElementById("googleSignIn").onclick = startGoogleSignIn;
-  document.getElementById("gateLineSignIn").onclick = startLineSignIn;
-  document.getElementById("lineSignIn").onclick = startLineSignIn;
 }
 if (auth) {
   onAuthStateChanged(auth, renderAccount, error => {
