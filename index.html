@@ -73,9 +73,11 @@ function renderAccount(user) {
       console.error(error);
       const messages = {
         "auth/popup-closed-by-user": "登入視窗已關閉。",
-        "auth/unauthorized-domain": "此網站網域尚未加入 Firebase 授權網域。",
-        "auth/operation-not-allowed": "Firebase 尚未啟用 Google 登入。",
         "auth/popup-blocked": "瀏覽器封鎖了登入視窗，請允許此網站開啟彈出視窗後再試。",
+        "auth/unauthorized-domain": "目前網站網址尚未加入 Firebase 授權網域；請使用 localhost 或已設定的正式網址。",
+        "auth/operation-not-allowed": "Firebase 專案尚未啟用 Google 登入，請至 Authentication > Sign-in method 啟用。",
+        "auth/invalid-api-key": "Firebase API 金鑰無效，請確認網頁使用正確的 Firebase 專案設定。",
+        "auth/invalid-oauth-client-id": "Google OAuth 用戶端設定不正確，請檢查 Firebase 的 Google 登入設定。",
         "auth/network-request-failed": "網路連線失敗，請檢查連線後重試。",
         "auth/timeout": "登入逾時，請再試一次。"
       };
