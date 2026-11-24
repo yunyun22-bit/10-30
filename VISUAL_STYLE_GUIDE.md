@@ -50,4 +50,4 @@
 
 - 760px 以下縮小上下蕾絲邊、縮排 Hero 插畫、保留標題和主操作區空間。
 - 貼紙採緩慢上下浮動；`prefers-reduced-motion: reduce` 時停用動畫。
-- 主題即時預覽並保存至 `localStorage`；登入頁以 940px 置中的雙欄卡片呈現 AngelNote 品牌、登入／註冊頁籤、電子郵件和密碼欄位、記住我、忘記密碼與 Google 快速登入。Email/Password 前端串接已備妥；Firebase 專案必須另外啟用此登入提供者後，才可建立或登入密碼帳號。
+- 主題即時預覽並保存至 `localStorage`；登入頁以滿版主題花紋和 max-width 440px 的單欄置中卡片呈現 AngelNote 品牌、登入／註冊頁籤、電子郵件和密碼欄位、記住我、忘記密碼與 Google 快速登入。Email/Password 前端串接已備妥；Firebase 專案必須另外啟用此登入提供者後，才可建立或登入密碼帳號。
